@@ -8,14 +8,24 @@ inputs:
     description: 'Path to coverage file'
     required: false
     default: ''
+  type-coverage-file:
+    description: 'Path to type coverage file'
+    required: false
+    default: ''
 runs:
   using: 'composite'
   steps:
     - name: Upload coverage
       shell: bash
       run: |
+        CMD="bash <(curl -s https://raw.githubusercontent.com/getOtterWise/bash-uploader/main/uploader.sh) --repo-token ${{ inputs.token }}"
+        
         if [ -n "${{ inputs.file }}" ]; then
-          bash <(curl -s https://raw.githubusercontent.com/getOtterWise/bash-uploader/main/uploader.sh) --repo-token ${{ inputs.token }} --file ${{ inputs.file }}
-        else
-          bash <(curl -s https://raw.githubusercontent.com/getOtterWise/bash-uploader/main/uploader.sh) --repo-token ${{ inputs.token }}
+          CMD="$CMD --file ${{ inputs.file }}"
         fi
+        
+        if [ -n "${{ inputs.type-coverage-file }}" ]; then
+          CMD="$CMD --type-coverage-file ${{ inputs.type-coverage-file }}"
+        fi
+        
+        eval $CMD
