@@ -1,0 +1,21 @@
+name: 'OtterWise Coverage Upload'
+description: 'Upload code coverage to OtterWise'
+inputs:
+  token:
+    description: 'OtterWise Repo token'
+    required: true
+  file:
+    description: 'Path to coverage file'
+    required: false
+    default: ''
+runs:
+  using: 'composite'
+  steps:
+    - name: Upload coverage
+      shell: bash
+      run: |
+        if [ -n "${{ inputs.file }}" ]; then
+          bash <(curl -s https://raw.githubusercontent.com/getOtterWise/bash-uploader/main/uploader.sh) --repo-token ${{ inputs.token }} --file ${{ inputs.file }}
+        else
+          bash <(curl -s https://raw.githubusercontent.com/getOtterWise/bash-uploader/main/uploader.sh) --repo-token ${{ inputs.token }}
+        fi
