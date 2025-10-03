@@ -1,5 +1,7 @@
 name: 'OtterWise Coverage Upload'
 description: 'Upload code coverage to OtterWise'
+icon: 'check'
+color: 'black'
 inputs:
   token:
     description: 'OtterWise Repo token'
