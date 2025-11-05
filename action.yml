@@ -13,6 +13,10 @@ inputs:
     description: 'Path to coverage file'
     required: false
     default: ''
+  bash-uploader-sha:
+    description: 'Path to coverage file'
+    required: false
+    default: 'main'
   type-coverage-file:
     description: 'Path to type coverage file'
     required: false
@@ -23,7 +27,7 @@ runs:
     - name: Upload coverage
       shell: bash
       run: |
-        CMD="bash <(curl -s https://raw.githubusercontent.com/getOtterWise/bash-uploader/main/uploader.sh) --repo-token ${{ inputs.token }}"
+        CMD="bash <(curl -s https://raw.githubusercontent.com/getOtterWise/bash-uploader/${{ inputs.bash-uploader-sha }}/uploader.sh) --repo-token ${{ inputs.token }}"
         
         if [ -n "${{ inputs.file }}" ]; then
           CMD="$CMD --file ${{ inputs.file }}"
