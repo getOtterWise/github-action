@@ -8,33 +8,107 @@ branding:
 inputs:
   token:
     description: 'OtterWise Repo token'
-    required: true
+    required: false
+    default: ''
+  org-token:
+    description: 'OtterWise Org token'
+    required: false
+    default: ''
   file:
     description: 'Path to coverage file'
     required: false
     default: ''
-  bash-uploader-sha:
-    description: 'Path to coverage file'
+  mutation-file:
+    description: 'Path to mutation testing results file'
     required: false
-    default: 'main'
+    default: ''
   type-coverage-file:
     description: 'Path to type coverage file'
     required: false
     default: ''
+  log-file:
+    description: 'Path to test log file (JUnit XML)'
+    required: false
+    default: ''
+  quiet:
+    description: 'Suppress verbose output'
+    required: false
+    default: 'false'
+  fail-on-errors:
+    description: 'Exit with error code 1 if processing fails'
+    required: false
+    default: 'false'
+  flag:
+    description: 'Custom identifier/tag for this upload'
+    required: false
+    default: ''
+  base-dir:
+    description: 'Base directory path for relative file references'
+    required: false
+    default: ''
+  endpoint:
+    description: 'Custom API endpoint URL'
+    required: false
+    default: ''
+  bash-uploader-sha:
+    description: 'Git ref for the bash uploader script'
+    required: false
+    default: 'main'
 runs:
   using: 'composite'
   steps:
     - name: Upload coverage
       shell: bash
       run: |
-        CMD="bash <(curl -s https://raw.githubusercontent.com/getOtterWise/bash-uploader/${{ inputs.bash-uploader-sha }}/uploader.sh) --repo-token ${{ inputs.token }}"
-        
+        if [ -z "${{ inputs.token }}" ] && [ -z "${{ inputs.org-token }}" ]; then
+          echo "::error::Either 'token' or 'org-token' must be provided"
+          exit 1
+        fi
+
+        CMD="bash <(curl -s https://raw.githubusercontent.com/getOtterWise/bash-uploader/${{ inputs.bash-uploader-sha }}/uploader.sh)"
+
+        if [ -n "${{ inputs.token }}" ]; then
+          CMD="$CMD --repo-token ${{ inputs.token }}"
+        fi
+
+        if [ -n "${{ inputs.org-token }}" ]; then
+          CMD="$CMD --org-token ${{ inputs.org-token }}"
+        fi
+
         if [ -n "${{ inputs.file }}" ]; then
           CMD="$CMD --file ${{ inputs.file }}"
         fi
-        
+
+        if [ -n "${{ inputs.mutation-file }}" ]; then
+          CMD="$CMD --mutation-file ${{ inputs.mutation-file }}"
+        fi
+
         if [ -n "${{ inputs.type-coverage-file }}" ]; then
           CMD="$CMD --type-coverage-file ${{ inputs.type-coverage-file }}"
         fi
-        
+
+        if [ -n "${{ inputs.log-file }}" ]; then
+          CMD="$CMD --log-file ${{ inputs.log-file }}"
+        fi
+
+        if [ "${{ inputs.quiet }}" == "true" ]; then
+          CMD="$CMD --quiet"
+        fi
+
+        if [ "${{ inputs.fail-on-errors }}" == "true" ]; then
+          CMD="$CMD --stop-on-errors"
+        fi
+
+        if [ -n "${{ inputs.flag }}" ]; then
+          CMD="$CMD --flag ${{ inputs.flag }}"
+        fi
+
+        if [ -n "${{ inputs.base-dir }}" ]; then
+          CMD="$CMD --base-dir ${{ inputs.base-dir }}"
+        fi
+
+        if [ -n "${{ inputs.endpoint }}" ]; then
+          CMD="$CMD --endpoint ${{ inputs.endpoint }}"
+        fi
+
         eval $CMD
