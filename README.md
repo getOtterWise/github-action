@@ -17,10 +17,10 @@
 | `file` | Path to coverage file | No | `''` |
 | `mutation-file` | Path to mutation testing results file | No | `''` |
 | `type-coverage-file` | Path to type coverage file | No | `''` |
-| `log-file` | Path to test log file (JUnit XML) | No | `''` |
 | `quiet` | Suppress verbose output | No | `false` |
 | `fail-on-errors` | Exit with error code 1 if processing fails | No | `false` |
 | `flag` | Custom identifier/tag for this upload | No | `''` |
+| `component` | Custom component for this upload, useful for monorepos. Example: Backend | No | `''` |
 | `base-dir` | Base directory for relative file references | No | `''` |
 | `endpoint` | Custom API endpoint URL | No | `''` |
 | `bash-uploader-sha` | Git ref for the bash uploader script | No | `main` |
@@ -56,7 +56,7 @@ Full example:
     file: build/coverage/clover.xml
     mutation-file: infection.json
     type-coverage-file: pest-type-cov.json
-    log-file: junit.xml
+    component: frontend
     flag: unit-tests
     quiet: true
     fail-on-errors: true
