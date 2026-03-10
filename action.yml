@@ -26,10 +26,6 @@ inputs:
     description: 'Path to type coverage file'
     required: false
     default: ''
-  log-file:
-    description: 'Path to test log file (JUnit XML)'
-    required: false
-    default: ''
   quiet:
     description: 'Suppress verbose output'
     required: false
@@ -40,6 +36,10 @@ inputs:
     default: 'false'
   flag:
     description: 'Custom identifier/tag for this upload'
+    required: false
+    default: ''
+  component:
+    description: 'Custom component for this upload, eg Frontend, Backend or such. Particularly useful for monorepos.'
     required: false
     default: ''
   base-dir:
@@ -101,6 +101,10 @@ runs:
 
         if [ -n "${{ inputs.flag }}" ]; then
           CMD="$CMD --flag ${{ inputs.flag }}"
+        fi
+
+        if [ -n "${{ inputs.component }}" ]; then
+          CMD="$CMD --component ${{ inputs.component }}"
         fi
 
         if [ -n "${{ inputs.base-dir }}" ]; then
