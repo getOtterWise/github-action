@@ -46,7 +46,7 @@ inputs:
     description: 'Index of a multi-part upload. Leave empty unless you specifically need it.'
     required: false
     default: ''
-  part_total:
+  part-total:
     description: 'How many parts in the multi-part upload. Leave empty unless you specifically need it.'
     required: false
     default: ''
@@ -119,7 +119,7 @@ runs:
           CMD="$CMD --part ${{ inputs.part }}"
         fi
 
-        if [ -n "${{ inputs.part_total }}" ]; then
+        if [ -n "${{ inputs.part-total }}" ]; then
           CMD="$CMD --part-total ${{ inputs.part_total }}"
         fi
 
