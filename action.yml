@@ -42,6 +42,14 @@ inputs:
     description: 'Custom component for this upload, eg Frontend, Backend or such. Particularly useful for monorepos.'
     required: false
     default: ''
+  part:
+    description: 'Index of a multi-part upload. Leave empty unless you specifically need it.'
+    required: false
+    default: ''
+  part-total:
+    description: 'How many parts in the multi-part upload. Leave empty unless you specifically need it.'
+    required: false
+    default: ''
   base-dir:
     description: 'Base directory path for relative file references'
     required: false
@@ -105,6 +113,14 @@ runs:
 
         if [ -n "${{ inputs.component }}" ]; then
           CMD="$CMD --component ${{ inputs.component }}"
+        fi
+
+        if [ -n "${{ inputs.part }}" ]; then
+          CMD="$CMD --part ${{ inputs.part }}"
+        fi
+
+        if [ -n "${{ inputs.part-total }}" ]; then
+          CMD="$CMD --part-total ${{ inputs.part_total }}"
         fi
 
         if [ -n "${{ inputs.base-dir }}" ]; then
